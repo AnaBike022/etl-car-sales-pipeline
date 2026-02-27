@@ -1,9 +1,12 @@
 
 # import libraries
 from py_compile import main
-
 import pandas as pd
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 # extract data from csv file
@@ -31,23 +34,23 @@ def transform(df):
 # saving the data to a parquet file
 
 def load(df):
-    
-    USER = "postgres"
-    PASSWORD = "postgre" 
-    HOST = "localhost"
-    PORT = "5432"
-    DATABASE = "postgres"
-    TABLE = "car_sales"
-    SCHEMA = "public"
+    USER = os.getenv("user")
+    PASSWORD = os.getenv("PASSWORD")
+    HOST = os.getenv("HOST")
+    PORT = os.getenv("PORT")
+    DATABASE = os.getenv("DATABASE")
+    TABLE = os.getenv("TABLE")
+    SCHEMA = os.getenv("SCHEMA")
+
 
     # Create a connection string
-    connection_string = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+connection_string = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
     # Create a SQLAlchemy engine
-    db_engine = create_engine(connection_string)
+db_engine = create_engine(connection_string)
 
     # Save the DataFrame to PostgreSQL
-    df.to_sql(TABLE, db_engine, schema=SCHEMA, if_exists="replace", index=False)
+df.to_sql(TABLE, db_engine, schema=SCHEMA, if_exists="replace", index=False)
 
 
     # Run Pipeline
